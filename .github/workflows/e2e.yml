@@ -23,7 +23,10 @@ jobs:
       
     # Prepare
     - uses: actions/checkout@v1
-    - run: gem install bundler -v "~> 1.7"
+    - name: Setup bundler ~> 1.7
+      run: |
+        gem uninstall bundler
+        gem install bundler -v "~> 1.7"
     - run: bundle install -j4 --clean --path=vendor
     - run: bundle exec xcversion update
     - run: bundle exec xcversion uninstall ${{ matrix.xcode }}
