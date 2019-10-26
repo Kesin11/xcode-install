@@ -15,17 +15,26 @@ jobs:
       XCODE_INSTALL_USER: ${{ secrets.XCODE_INSTALL_USER }}
       XCODE_INSTALL_PASSWORD: ${{ secrets.XCODE_INSTALL_PASSWORD }}
     steps:
+    # Show env
     - name: Show macOS version
       run: sw_vers
     - name: Show ruby version
       run: ruby --version
       
-    - run: gem install xcode-install
-    - run: xcversion update
-    - run: xcversion uninstall ${{ matrix.xcode }}
-    - run: xcversion installed
-    - run: xcversion install ${{ matrix.xcode }}
+    # Prepare
+    - uses: actions/checkout@v1
+    - run: gem install bundler -v "~> 1.7"
+    - run: bundle install -j4 --clean --path=vendor
+    - run: bundle exec xcversion update
+    - run: bundle exec xcversion uninstall ${{ matrix.xcode }}
+    - name: Show installed versions before install
+      run: bundle exec xcversion installed
 
-    - run: xcversion installed
+    # Exec
+    - run: bundle exec xcversion install ${{ matrix.xcode }}
+
+    # Check
+    - name: Show installed versions after install
+      run: bundle exec xcversion installed
     - name: Check Xcode installation was successful
-      run: xcversion installed | grep "${{ matrix.xcode }}"
+      run: bundle exec xcversion installed | grep "${{ matrix.xcode }}"
