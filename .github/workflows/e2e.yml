@@ -22,8 +22,8 @@ jobs:
       run: ruby --version
       
     # Prepare
-    - uses: actions/checkout@v1
-    - uses: actions/setup-ruby@v1
+    - uses: actions/checkout@master
+    - uses: actions/setup-ruby@master
       with:
         ruby-version: '2.6'
     - run: bundle install -j4 --clean --path=vendor
