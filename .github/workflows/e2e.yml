@@ -15,17 +15,21 @@ jobs:
       XCODE_INSTALL_USER: ${{ secrets.XCODE_INSTALL_USER }}
       XCODE_INSTALL_PASSWORD: ${{ secrets.XCODE_INSTALL_PASSWORD }}
     steps:
-    # Show env
-    - name: Show macOS version
-      run: sw_vers
-    - name: Show ruby version
-      run: ruby --version
-      
-    # Prepare
+    # Prepare env
     - uses: actions/checkout@master
     - uses: actions/setup-ruby@master
       with:
         ruby-version: '2.6'
+
+    # Show env
+    - name: Show macOS version
+      run: sw_vers
+    - name: Show ruby version
+      run: |
+        ruby --version
+        bundler --version
+    
+    # Prepare
     - run: bundle install -j4 --clean --path=vendor
     - run: bundle exec xcversion update
     - run: bundle exec xcversion uninstall ${{ matrix.xcode }}
